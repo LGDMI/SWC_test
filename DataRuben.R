@@ -111,5 +111,21 @@ physicochemical.control <- df %>%
 Diversity <- df %>%    
   filter(Reactor.phase == "Startup") %>%  
   select(Diversity...D0, Diversity...D1, Diversity...D2)
-Diversity
+#OR
+Diversity <- df %>%    
+  filter(Reactor.phase == "Startup") %>%  
+  select(contains("Diversity"))
 
+## Grouping by
+meanph <- df %>%  group_by(Reactor.phase) %>%  summarize(mean.ph = mean(ph), mean.d2 = mean(Diversity...D2))
+meanph
+levels(df$Reactor.phase)
+
+##Challenge
+#generate summary for reactor.cycle only and add standard deviation of the d2 and the log transformed cell count
+meanph <- df %>%  group_by(Reactor.phase) %>%  filter(Reactor.cycle==2) %>% summarize(mean.ph = mean(ph), sd.d2 = sd(Diversity...D2), mean.log.cellcount = mean(log10(Cell.density..cells.mL.)))
+meanph
+
+
+# observations are ROWs and variables are COLUMNS
+# you filter by ROWS and select COLUMNS
