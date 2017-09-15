@@ -129,3 +129,23 @@ meanph
 
 # observations are ROWs and variables are COLUMNS
 # you filter by ROWS and select COLUMNS
+
+
+# mutate  => create new variables and fill it in with a new calculation
+meanph <- df %>%  group_by(Reactor.phase) %>%  
+  mutate(Condratio=Conductivity/temp) %>% 
+  summarize(mean.ph = mean(ph), mean.d2 = mean(Diversity...D2), mean.cond = mean(Condratio))  
+
+meanph
+
+## join data sets ##
+physicochemical <- df %>%  select(sample_title, temp, ph, Conductivity)
+
+Diversity <- df %>%  select(sample_title,temp, ph, contains("Diversity"))
+
+# there are different join functions!!
+physicoDiversity <- dplyr::full_join(physicochemical,Diversity, "sample_title")  # sample_title moet in beide subsets staan == KEY
+
+
+df.nona <- na.exclude(df)    # erases rows with NA!!!
+is.na(df)
