@@ -43,10 +43,13 @@ p4 + geom_line(aes(color = Reactor.phase))
 ### Middle: Diversity D0
 ### Left: Cell density
 
+df$Cell.density..cells.mL.
+p1 <- ggplot(data = df, aes(x = Timepoint,y = Cell.density..cells.mL., fill = Cell.density..cells.mL.)) +
+  geom_point(shape = 21, size = 4)
+p1
 
-
-
-
+p2 <- p1 + scale_y_log10()  # change y-axis to log-scale
+p2
 
 
 
