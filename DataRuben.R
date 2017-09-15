@@ -40,7 +40,25 @@ p4 + geom_line(aes(color = Reactor.phase))
 
 #Challenge time
 ### Right side: Conductivity
+df <- read.csv("Metadata.csv",nrows=77)
+pp1 <- ggplot(data=df,aes(x= Timepoint,y=Conductivity,fill=Reactor.phase)) 
+
+pp1 <- pp1 + geom_point(shape=21,size=4,alpha = 0.5) + theme_bw() +  geom_line(aes(color=Reactor.cycle)) 
+pp1
+# Facet it 
+pp3 <- pp1 + facet_grid(~Reactor.cycle)
+pp3
+# how do i know whats in reactor phase 
+unique(df$Reactor.phase) 
+#plot alles in fucntie van reactor phase 
+pp4 <- pp1 + facet_grid(Reactor.phase~Reactor.cycle)
+pp4
+
 ### Middle: Diversity D0
+p5<-ggplot(data=df, aes(x=Timepoint , y=Diversity...D0, fill=Reactor.phase ))+
+  geom_point(shape=21, size=5)
+p5
+
 ### Left: Cell density
 
 df$Cell.density..cells.mL.
@@ -52,8 +70,46 @@ p2 <- p1 + scale_y_log10()  # change y-axis to log-scale
 p2
 
 
-
 colnames(df)
 
 view(df)
 ?ggplot2
+
+
+
+#### and NOW the statistics!!
+
+#read in data
+df <- read.csv("Metadata.csv")
+str (df)
+
+# load libraties
+library(ggplot2)
+library(dplyr)   #gives an error, becuz ther might be new functions loaded that were already loaded under the same names.
+                  # the last loaded library will overload them
+#what if you DO want to use the original functions?
+
+mean(df[df$Reactor.phase == "Control", "ph"])   # ph = column   #this selects any rows of ph where reactof.phase equals 'control'
+
+levels(df$Reactor.phase)   # => shows you that the factor contains 4 levels! => we're gonna efficiently calculate the mean for each level
+
+###Select ###
+physicochemical <- dplyr :: select(df,ph,temp,Conductivity)
+head(physicochemical)
+
+#piping => use Ctrl+ Shift+ m
+physicochemical <- df %>% select(ph,temp,Conductivity)
+
+physicochemical.control <- df %>% 
+  filter(Reactor.phase == "Control") %>%  
+  select(ph,temp,Conductivity)
+
+
+## Challenge
+# select only the diversity parameters for reacto.phase startup
+
+Diversity <- df %>%    
+  filter(Reactor.phase == "Startup") %>%  
+  select(Diversity...D0, Diversity...D1, Diversity...D2)
+Diversity
+
